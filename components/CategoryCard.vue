@@ -8,12 +8,19 @@ const props = defineProps({
 
 // Route parameters
 const route = useRoute();
+
+const imagePlaceholder = "/img/categories/placeholder.jpg";
+
+function replaceByDefault(e) {
+  e.target.src = imagePlaceholder;
+}
 </script>
 
 <template>
   <NuxtLink class="category-card" :to="route.path + category.slug">
     <img
       :src="category.image"
+      @error="replaceByDefault"
       :alt="category.title"
       class="category-card__image"
     />

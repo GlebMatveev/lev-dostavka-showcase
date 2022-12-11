@@ -44,6 +44,7 @@ const useIsCartButton = useState("isCartButton");
     font-weight: 700;
     align-self: center;
     text-transform: uppercase;
+    padding-top: 3px;
   }
   &__cart-counter {
     display: block;

@@ -1,10 +1,19 @@
 <script setup>
+// Import
+import upperCaseFirstChar from "@/helpers/js/upperCaseFirstChar";
+
 const props = defineProps({
   product: Object,
 });
 
 // Route parameters
 const route = useRoute();
+
+const imagePlaceholder = "/img/products/placeholder.jpg";
+
+function replaceByDefault(e) {
+  e.target.src = imagePlaceholder;
+}
 </script>
 
 <template>
@@ -13,6 +22,7 @@ const route = useRoute();
     <div class="product-card__left">
       <img
         :src="product.image"
+        @error="replaceByDefault"
         :alt="product.title"
         class="product-card__image"
       />
@@ -20,7 +30,9 @@ const route = useRoute();
 
     <!-- <NuxtLink :to="route.path + product.slug + '/'" class="product-card__right"></NuxtLink> -->
     <div class="product-card__right">
-      <h2 class="product-card__title">{{ product.title }}</h2>
+      <h2 class="product-card__title">
+        {{ upperCaseFirstChar(product.title) }}
+      </h2>
       <p class="product-card__description">{{ product.description }}</p>
       <p class="product-card__ingredients">{{ product.ingredients }}</p>
 
@@ -33,7 +45,7 @@ const route = useRoute();
           </p>
         </div>
         <div v-if="product.weight" class="product-card__property-wrapper">
-          <IconEquality class="product-card__property-icon" />
+          <IconScale class="product-card__property-icon" />
           <p class="product-card__property-text">{{ product.weight }}</p>
           <p class="product-card__property-unit">{{ product.weight_unit }}</p>
         </div>
@@ -75,6 +87,7 @@ const route = useRoute();
   &__left {
     display: flex;
     vertical-align: middle;
+    padding-right: 10px;
   }
   &__image {
     object-fit: contain;

@@ -9,23 +9,73 @@ const personalData = reactive({
   phone: "",
   name: "",
   persons: 0,
-  payment: "",
-  delivery: "",
+  payment: "Выберите способ оплаты",
+  delivery: "Выберите способ доставки",
+  deliveryCost: 0,
+  locality: "Выберите населённый пункт",
   address: "",
   gift: "",
 });
 
+// Watchers
+watch(
+  personalData,
+  () => {
+    localStorage.phone = personalData.phone;
+    localStorage.name = personalData.name;
+    sessionStorage.persons = personalData.persons;
+    sessionStorage.payment = personalData.payment;
+    sessionStorage.delivery = personalData.delivery;
+    localStorage.locality = personalData.locality;
+    localStorage.address = personalData.address;
+    sessionStorage.gift = personalData.gift;
+  },
+  { deep: true }
+);
+
+onMounted(() => {
+  localStorage.phone && localStorage.phone != ""
+    ? (personalData.phone = localStorage.phone)
+    : (personalData.phone = "");
+
+  localStorage.name && localStorage.name != ""
+    ? (personalData.name = localStorage.name)
+    : (personalData.name = "");
+
+  sessionStorage.persons && sessionStorage.persons != ""
+    ? (personalData.persons = sessionStorage.persons)
+    : (personalData.persons = 0);
+
+  sessionStorage.payment && sessionStorage.payment != ""
+    ? (personalData.payment = sessionStorage.payment)
+    : (personalData.payment = "Выберите способ оплаты");
+
+  sessionStorage.delivery && sessionStorage.delivery != ""
+    ? (personalData.delivery = sessionStorage.delivery)
+    : (personalData.delivery = "Выберите способ доставки");
+
+  localStorage.locality && localStorage.locality != ""
+    ? (personalData.locality = localStorage.locality)
+    : (personalData.locality = "Выберите населённый пункт");
+
+  localStorage.address && localStorage.address != ""
+    ? (personalData.address = localStorage.address)
+    : (personalData.address = "");
+
+  sessionStorage.gift && sessionStorage.gift != ""
+    ? (personalData.gift = sessionStorage.gift)
+    : (personalData.gift = "");
+});
+
 function orderString() {
   const strLineBreak = "\n";
-  const strDoubleLineBreak = "\n\n";
   let strOrder = "";
 
-  let strPhone = personalData.phone + strLineBreak;
+  let strPhone = personalData.phone;
 
-  let strName = personalData.name + strLineBreak;
+  let strName = personalData.name;
 
   let strProductList = "";
-  strProductList = strProductList + strLineBreak;
   for (let key in useStateCart.value) {
     const index = useStateProducts.value.findIndex(
       (item) => item.id === useStateCart.value[key].id
@@ -43,15 +93,63 @@ function orderString() {
     strProductList =
       strProductList + "+ " + personalData.gift + " в подарок" + strLineBreak;
   }
-  strProductList = strProductList + strLineBreak;
 
-  let strPersons = "Приборы: " + personalData.persons + strDoubleLineBreak;
+  let strPersons = "Приборы: " + personalData.persons;
 
-  let strDelivery = personalData.delivery + strLineBreak;
+  let strDelivery = personalData.delivery;
 
-  let strAddress = personalData.address + strDoubleLineBreak;
+  let strLocality = "";
+  if (personalData.delivery === "Доставка") {
+    strLocality = personalData.locality;
+  }
 
-  let strTotal = strLineBreak + useStateCartPrice.value + " ₽" + strLineBreak;
+  let strAddress = personalData.address;
+
+  let strTotal = "";
+  let strTotalComment = "";
+  if (useStateCartPrice.value < 1000) {
+    if (
+      personalData.delivery === "Доставка" &&
+      personalData.locality === "Лаишево"
+    ) {
+      let totalSum = useStateCartPrice.value + 150;
+      strTotal = "Сумма заказа: " + totalSum + " ₽";
+      strTotalComment = "(включая доставку 150 ₽)";
+    } else if (
+      personalData.delivery === "Доставка" &&
+      personalData.locality === "База/Старая Пристань"
+    ) {
+      let totalSum = useStateCartPrice.value + 200;
+      strTotal = "Сумма заказа: " + totalSum + " ₽";
+      strTotalComment = "(включая доставку 200 ₽)";
+    } else if (
+      personalData.delivery === "Доставка" &&
+      personalData.locality === "Другой"
+    ) {
+      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+      strTotalComment = "(доставка платная - уточняется у оператора)";
+    } else if (personalData.delivery === "Самовывоз") {
+      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+    }
+  } else if (useStateCartPrice.value >= 1000) {
+    if (
+      (personalData.delivery === "Доставка" &&
+        personalData.locality === "Лаишево") ||
+      (personalData.delivery === "Доставка" &&
+        personalData.locality === "База/Старая Пристань")
+    ) {
+      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+      strTotalComment = "(доставка бесплатная)";
+    } else if (
+      personalData.delivery === "Доставка" &&
+      personalData.locality === "Другой"
+    ) {
+      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+      strTotalComment = "(сумма доставки уточняется у оператора)";
+    } else if (personalData.delivery === "Самовывоз") {
+      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+    }
+  }
 
   let strPayment = personalData.payment + strLineBreak;
   //
@@ -59,29 +157,44 @@ function orderString() {
   //
 
   if (personalData.phone !== "") {
-    strOrder = strOrder + strPhone;
+    strOrder = strOrder + strPhone + strLineBreak;
   }
 
   if (personalData.name !== "") {
-    strOrder = strOrder + strName;
+    strOrder = strOrder + strName + strLineBreak;
   }
 
-  strOrder = strOrder + strProductList;
-
-  strOrder = strOrder + strPersons;
-
-  if (personalData.delivery !== "") {
-    strOrder = strOrder + strDelivery;
+  if (strProductList !== "") {
+    strOrder = strOrder + strLineBreak + strProductList;
   }
 
-  if (personalData.address !== "") {
-    strOrder = strOrder + strAddress;
+  strOrder = strOrder + strLineBreak + strPersons + strLineBreak;
+
+  if (personalData.delivery !== "Выберите способ доставки") {
+    strOrder = strOrder + strLineBreak + strDelivery + strLineBreak;
   }
 
-  strOrder = strOrder + strTotal;
+  if (
+    personalData.locality !== "Выберите населённый пункт" &&
+    personalData.delivery != "Самовывоз"
+  ) {
+    strOrder = strOrder + strLocality + strLineBreak;
+  }
 
-  if (personalData.payment !== "") {
-    strOrder = strOrder + strPayment;
+  if (personalData.address !== "" && personalData.delivery != "Самовывоз") {
+    strOrder = strOrder + strAddress + strLineBreak;
+  }
+
+  if (strProductList !== "") {
+    strOrder = strOrder + strLineBreak + strTotal + strLineBreak;
+  }
+
+  if (strProductList !== "" && personalData.delivery != "Самовывоз") {
+    strOrder = strOrder + strTotalComment + strLineBreak;
+  }
+
+  if (personalData.payment !== "Выберите способ оплаты") {
+    strOrder = strOrder + strLineBreak + strPayment;
   }
 
   return strOrder;
@@ -143,7 +256,38 @@ function orderString() {
         >
       </div>
 
-      <fieldset class="radiogroup">
+      <div class="input">
+        <select
+          class="input__field input__select"
+          v-model="personalData.payment"
+          id="payment"
+        >
+          <option disabled>Выберите способ оплаты</option>
+          <option>Перевод на карту</option>
+          <option>Наличные</option>
+        </select>
+        <div class="input__background"></div>
+        <label for="payment" class="input__placeholder">Способ оплаты</label>
+      </div>
+
+      <div
+        v-if="personalData.payment !== 'Выберите способ оплаты'"
+        class="input"
+      >
+        <select
+          class="input__field input__select"
+          v-model="personalData.delivery"
+          id="delivery"
+        >
+          <option disabled>Выберите способ доставки</option>
+          <option>Самовывоз</option>
+          <option>Доставка</option>
+        </select>
+        <div class="input__background"></div>
+        <label for="delivery" class="input__placeholder">Способ доставки</label>
+      </div>
+
+      <!-- <fieldset class="radiogroup">
         <legend class="radiogroup__legend">Способ оплаты:</legend>
 
         <div class="radiogroup__radio">
@@ -169,9 +313,9 @@ function orderString() {
           />
           <label class="radiogroup__label" for="cash">Наличные</label>
         </div>
-      </fieldset>
+      </fieldset> -->
 
-      <fieldset class="radiogroup">
+      <!-- <fieldset class="radiogroup">
         <legend class="radiogroup__legend">Способ доставки:</legend>
 
         <div class="radiogroup__radio">
@@ -197,7 +341,7 @@ function orderString() {
           />
           <label class="radiogroup__label" for="delivery">Доставка</label>
         </div>
-      </fieldset>
+      </fieldset> -->
 
       <div v-if="personalData.delivery === 'Самовывоз'" class="delivery__hints">
         <div v-if="useStateCartPrice >= 1000" class="delivery__text-wrapper">
@@ -255,36 +399,65 @@ function orderString() {
 
       <div v-if="personalData.delivery === 'Доставка'" class="delivery__hints">
         <div class="input">
-          <input
-            v-model="personalData.address"
-            id="name"
-            class="input__field"
-            type="text"
-            placeholder=" "
-            required
-          />
+          <select
+            class="input__field input__select"
+            v-model="personalData.locality"
+            id="locality"
+          >
+            <option disabled>Выберите населённый пункт</option>
+            <option value="Лаишево">Лаишево</option>
+            <option value="База/Старая Пристань">База/Старая Пристань</option>
+            <option value="Другой">Другой</option>
+          </select>
           <div class="input__background"></div>
-          <label for="name" class="input__placeholder">Адрес</label>
+          <label for="locality" class="input__placeholder"
+            >Населённый пункт</label
+          >
         </div>
 
-        <div class="delivery__text-wrapper">
-          <p class="delivery__text">Условия бесплатной доставки:</p>
-          <p class="delivery__text">- от 1000 рублей в пределах Лаишево</p>
-          <p class="delivery__text">
-            - от 1200 рублей на Базу и Старую Пристань
-          </p>
-          <p class="delivery__text">
-            Остальные варианты уточняются у оператора при подтверждении заказа.
-          </p>
-          <p class="delivery__text text-danger">
-            При самовывозе заказа от 1000 рублей действует акция - бесплатный
-            ролл на выбор.
-          </p>
+        <div
+          style="margin-top: 30px"
+          v-if="personalData.locality !== 'Выберите населённый пункт'"
+        >
+          <div class="input">
+            <input
+              v-model="personalData.address"
+              id="name"
+              class="input__field"
+              type="text"
+              placeholder=" "
+              required
+            />
+            <div class="input__background"></div>
+            <label for="name" class="input__placeholder">Адрес</label>
+          </div>
+
+          <div class="delivery__text-wrapper">
+            <p class="delivery__text">Условия бесплатной доставки:</p>
+            <p class="delivery__text">- от 1000 рублей в пределах Лаишево</p>
+            <p class="delivery__text">
+              - от 1200 рублей на Базу и Старую Пристань
+            </p>
+            <p class="delivery__text">
+              Остальные варианты уточняются у оператора при подтверждении
+              заказа.
+            </p>
+            <p class="delivery__text text-danger">
+              При самовывозе заказа от 1000 рублей действует акция - бесплатный
+              ролл на выбор.
+            </p>
+          </div>
         </div>
       </div>
     </form>
 
-    <div class="order__list">
+    <div
+      v-if="
+        personalData.delivery !== 'Выберите способ доставки' &&
+        useStateCartPrice > 0
+      "
+      class="order__list"
+    >
       <h2 class="order__list-title">Состав заказа</h2>
       <p class="order__list-content" style="white-space: pre-line">
         {{ orderString() }}
@@ -293,6 +466,10 @@ function orderString() {
   </div>
 
   <a
+    v-if="
+      personalData.delivery !== 'Выберите способ доставки' &&
+      useStateCartPrice > 0
+    "
     :href="`https://wa.me/79033133319?text=${encodeURIComponent(
       orderString()
     )}`"
@@ -332,9 +509,17 @@ function orderString() {
   &__list-title {
     margin-bottom: 10px;
     font-size: 20px;
+    text-align: center;
   }
   &__list-content {
-    font-family: "Roboto Mono", monospace;
+    // font-family: "Roboto Mono", monospace;
+    // font-family: "Source Code Pro", monospace;
+    margin-bottom: 10px;
+    padding: 15px;
+    // margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: $color-input;
   }
 
   &__button {
@@ -377,6 +562,7 @@ function orderString() {
     outline: 0;
     padding: 4px 20px 0;
     width: 100%;
+    color: $color-text-gray;
   }
 
   &__background {
@@ -403,6 +589,7 @@ function orderString() {
     transform-origin: 0 50%;
     transition: transform 200ms, color 200ms;
     top: 20px;
+    color: $color-input-text;
   }
 
   &__field:focus ~ &__placeholder,
@@ -411,7 +598,7 @@ function orderString() {
   }
 
   &__field:not(:placeholder-shown) ~ &__placeholder {
-    color: $color-text-gray;
+    color: $color-input-text;
   }
 
   &__field:focus ~ &__placeholder {
@@ -450,16 +637,15 @@ function orderString() {
 }
 
 .delivery {
-  &__hints {
-    margin-top: 15px;
-  }
   &__text-wrapper {
     margin-bottom: 10px;
     // margin-left: 10px;
     // margin-right: 10px;
 
     padding: 15px;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     border-radius: 10px;
     background: $color-input;
   }

@@ -7,7 +7,7 @@
 		"slug": "klassicheskie-rolly",
 		"description": "классические роллы",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/1/1.png",
+		"image": "/img/subcategories/1/1.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -19,7 +19,7 @@
 		"slug": "firmennye-rolly",
 		"description": "фирменные роллы",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/2/2.png",
+		"image": "/img/subcategories/2/2.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -31,7 +31,7 @@
 		"slug": "holodnye-rolly",
 		"description": "холодные роллы",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/3/3.png",
+		"image": "/img/subcategories/3/3.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -43,7 +43,7 @@
 		"slug": "zapechennye-rolly",
 		"description": "запечённые роллы",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/4/4.png",
+		"image": "/img/subcategories/4/4.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -55,7 +55,7 @@
 		"slug": "rolly-v-tempure",
 		"description": "роллы в темпуре",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/5/5.png",
+		"image": "/img/subcategories/5/5.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -67,7 +67,7 @@
 		"slug": "sety",
 		"description": "сеты",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/6/6.png",
+		"image": "/img/subcategories/6/6.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -79,7 +79,7 @@
 		"slug": "goryachie-zakuski",
 		"description": "горячие закуски",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/7/7.png",
+		"image": "/img/subcategories/7/7.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -91,7 +91,7 @@
 		"slug": "sousy",
 		"description": "соусы",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/8/8.png",
+		"image": "/img/subcategories/8/8.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -103,7 +103,7 @@
 		"slug": "soki",
 		"description": "соки",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/9/9.png",
+		"image": "/img/subcategories/9/9.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	},
@@ -115,7 +115,7 @@
 		"slug": "gazirovannye-napitki",
 		"description": "газированные напитки",		
 		"sort_weight": "50",
-		"image": "/img/subcategories/10/10.png",
+		"image": "/img/subcategories/10/10.jpg",
 		"created_at": "2022-12-01 00:00:00",
 		"modified_at": "2022-12-01 00:00:00"
 	}
