@@ -30,7 +30,7 @@ const useIsCartButton = useState("isCartButton");
 
   &__nav {
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 10fr 1fr;
 
     padding-left: 15px;
     padding-right: 15px;

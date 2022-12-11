@@ -259,7 +259,7 @@ function orderString() {
             v-model="personalData.address"
             id="name"
             class="input__field"
-            type="tel"
+            type="text"
             placeholder=" "
             required
           />
