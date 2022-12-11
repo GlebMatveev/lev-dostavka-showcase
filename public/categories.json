@@ -1,0 +1,42 @@
+[
+	{
+		"id": "1",
+		"title": "роллы",
+		"slug": "rolly",
+		"description": "классические роллы, фирменные роллы, холодные роллы, запечённые роллы, роллы в темпуре, сеты",		
+		"sort_weight": "1",
+		"image": "/img/categories/1/rolls.svg",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "2",
+		"title": "фастфуд",
+		"slug": "fastfud",
+		"description": "картофель фри, картофель по-деревенски, наггетсы, луковые кольца, сырные медальоны, куриные крылышки, куриные ножки",		
+		"sort_weight": "2",
+		"image": "/img/categories/2/french-fries.svg",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "3",
+		"title": "соусы",
+		"slug": "sousy",
+		"description": "соевый соус, соус цезарь, чесночный соус, соус унаги, спайси соус, сырный соус, соус барбекю, ореховый соус, кетчуп, кисло-сладкий соус",		
+		"sort_weight": "3",
+		"image": "/img/categories/3/sauces.svg",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "4",
+		"title": "напитки",
+		"slug": "napitki",
+		"description": "соки, детские соки, coca-cola",		
+		"sort_weight": "4",
+		"image": "/img/categories/4/juice.svg",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	}
+]

@@ -1,0 +1,122 @@
+[
+	{
+		"id": "1",
+		"category_id": "1",
+		"category_slug": "rolly",
+		"title": "классические роллы",
+		"slug": "klassicheskie-rolly",
+		"description": "классические роллы",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/1/1.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "2",
+		"category_id": "1",
+		"category_slug": "rolly",
+		"title": "фирменные роллы",
+		"slug": "firmennye-rolly",
+		"description": "фирменные роллы",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/2/2.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "3",
+		"category_id": "1",
+		"category_slug": "rolly",
+		"title": "холодные роллы",
+		"slug": "holodnye-rolly",
+		"description": "холодные роллы",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/3/3.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "4",
+		"category_id": "1",
+		"category_slug": "rolly",
+		"title": "запечённые роллы",
+		"slug": "zapechennye-rolly",
+		"description": "запечённые роллы",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/4/4.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "5",
+		"category_id": "1",
+		"category_slug": "rolly",
+		"title": "роллы в темпуре",
+		"slug": "rolly-v-tempure",
+		"description": "роллы в темпуре",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/5/5.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "6",
+		"category_id": "1",
+		"category_slug": "rolly",
+		"title": "сеты",
+		"slug": "sety",
+		"description": "сеты",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/6/6.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "7",
+		"category_id": "2",
+		"category_slug": "fastfud",
+		"title": "горячие закуски",
+		"slug": "goryachie-zakuski",
+		"description": "горячие закуски",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/7/7.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "8",
+		"category_id": "3",
+		"category_slug": "sousy",
+		"title": "соусы",
+		"slug": "sousy",
+		"description": "соусы",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/8/8.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "9",
+		"category_id": "4",
+		"category_slug": "napitki",
+		"title": "соки",
+		"slug": "soki",
+		"description": "соки",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/9/9.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	},
+	{
+		"id": "10",
+		"category_id": "4",
+		"category_slug": "napitki",
+		"title": "газированные напитки",
+		"slug": "gazirovannye-napitki",
+		"description": "газированные напитки",		
+		"sort_weight": "50",
+		"image": "/img/subcategories/10/10.png",
+		"created_at": "2022-12-01 00:00:00",
+		"modified_at": "2022-12-01 00:00:00"
+	}
+]
