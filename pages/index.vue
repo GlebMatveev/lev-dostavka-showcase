@@ -1,7 +1,4 @@
 <script setup>
-// Route parameters
-const route = useRoute();
-
 // States
 const useStateCategories = useState("stateCategories");
 </script>

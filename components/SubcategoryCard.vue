@@ -2,6 +2,7 @@
 // Import
 import upperCaseFirstChar from "@/helpers/js/upperCaseFirstChar";
 
+// Props
 const props = defineProps({
   subcategory: Object,
 });
@@ -9,9 +10,9 @@ const props = defineProps({
 // Route parameters
 const route = useRoute();
 
+// Image placeholder
 const imagePlaceholder = "/img/subcategories/placeholder.jpg";
-
-function replaceByDefault(e) {
+function replaceImgByDefault(e) {
   e.target.src = imagePlaceholder;
 }
 </script>
@@ -20,7 +21,7 @@ function replaceByDefault(e) {
   <NuxtLink class="subcategory-card" :to="route.path + '/' + subcategory.slug">
     <img
       :src="subcategory.image"
-      @error="replaceByDefault"
+      @error="replaceImgByDefault"
       :alt="subcategory.title"
       class="subcategory-card__image"
     />

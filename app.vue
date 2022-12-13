@@ -40,8 +40,7 @@ const useStateSubcategories = useState(
   () => subcategories
 );
 const useStateProducts = useState("stateProducts", () => products);
-
-// !!! localStorage
+//
 const useStateCart = useState("stateCart", () => []);
 const useStateCartQuantity = useState("stateCartQuantity", () => 0);
 const useStateCartPrice = useState("stateCartPrice", () => 0);

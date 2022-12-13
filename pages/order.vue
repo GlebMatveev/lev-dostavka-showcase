@@ -1,5 +1,7 @@
 <script setup>
+// Import
 import { vMaska } from "maska";
+
 // States
 const useStateProducts = useState("stateProducts");
 const useStateCart = useState("stateCart");
@@ -16,6 +18,8 @@ const personalData = reactive({
   address: "",
   gift: "",
 });
+
+const whatsAppNumber = "79033133319";
 
 // Watchers
 watch(
@@ -287,62 +291,6 @@ function orderString() {
         <label for="delivery" class="input__placeholder">Способ доставки</label>
       </div>
 
-      <!-- <fieldset class="radiogroup">
-        <legend class="radiogroup__legend">Способ оплаты:</legend>
-
-        <div class="radiogroup__radio">
-          <input
-            v-model="personalData.payment"
-            class="radiogroup__input"
-            type="radio"
-            id="card"
-            name="payment"
-            value="Перевод на карту"
-          />
-          <label class="radiogroup__label" for="card">Перевод на карту</label>
-        </div>
-
-        <div class="radiogroup__radio">
-          <input
-            v-model="personalData.payment"
-            class="radiogroup__input"
-            type="radio"
-            id="cash"
-            name="payment"
-            value="Наличные"
-          />
-          <label class="radiogroup__label" for="cash">Наличные</label>
-        </div>
-      </fieldset> -->
-
-      <!-- <fieldset class="radiogroup">
-        <legend class="radiogroup__legend">Способ доставки:</legend>
-
-        <div class="radiogroup__radio">
-          <input
-            v-model="personalData.delivery"
-            class="radiogroup__input"
-            type="radio"
-            id="pickup"
-            name="delivery"
-            value="Самовывоз"
-          />
-          <label class="radiogroup__label" for="pickup">Самовывоз</label>
-        </div>
-
-        <div class="radiogroup__radio">
-          <input
-            v-model="personalData.delivery"
-            class="radiogroup__input"
-            type="radio"
-            id="delivery"
-            name="delivery"
-            value="Доставка"
-          />
-          <label class="radiogroup__label" for="delivery">Доставка</label>
-        </div>
-      </fieldset> -->
-
       <div v-if="personalData.delivery === 'Самовывоз'" class="delivery__hints">
         <div v-if="useStateCartPrice >= 1000" class="delivery__text-wrapper">
           <p class="delivery__text">
@@ -470,7 +418,7 @@ function orderString() {
       personalData.delivery !== 'Выберите способ доставки' &&
       useStateCartPrice > 0
     "
-    :href="`https://wa.me/79033133319?text=${encodeURIComponent(
+    :href="`https://wa.me/${whatsAppNumber}?text=${encodeURIComponent(
       orderString()
     )}`"
     class="order__button"
@@ -492,7 +440,6 @@ function orderString() {
     border-radius: 10px;
     background: $color-background;
     box-shadow: $shadow-card;
-
     margin-bottom: 15px;
   }
 
@@ -503,7 +450,6 @@ function orderString() {
     border-radius: 10px;
     background: $color-background;
     box-shadow: $shadow-card;
-
     margin-bottom: 15px;
   }
   &__list-title {
@@ -512,11 +458,8 @@ function orderString() {
     text-align: center;
   }
   &__list-content {
-    // font-family: "Roboto Mono", monospace;
-    // font-family: "Source Code Pro", monospace;
     margin-bottom: 10px;
     padding: 15px;
-    // margin-top: 20px;
     margin-bottom: 10px;
     border-radius: 10px;
     background: $color-input;
@@ -527,10 +470,7 @@ function orderString() {
     justify-content: center;
     vertical-align: middle;
     padding: 15px 0;
-    // border-radius: 10px;
     background-color: $color-whatsapp;
-    // box-shadow: $shadow-card;
-    // margin-bottom: 30px;
   }
   &__button-icon {
     height: 25px;
@@ -617,13 +557,11 @@ function orderString() {
   margin-right: 10px;
 
   &__legend {
-    // margin-left: 20px;
     margin-bottom: 15px;
     font-weight: 700;
   }
 
   &__radio {
-    // margin-left: 5px;
     margin-bottom: 10px;
   }
 
@@ -638,19 +576,13 @@ function orderString() {
 
 .delivery {
   &__text-wrapper {
-    margin-bottom: 10px;
-    // margin-left: 10px;
-    // margin-right: 10px;
-
     padding: 15px;
-    // margin-bottom: 15px;
     margin-top: 20px;
     margin-bottom: 10px;
     border-radius: 10px;
     background: $color-input;
   }
   &__text {
-    // color: $color-text-gray;
     margin-bottom: 10px;
   }
 }

@@ -1,9 +1,4 @@
 <script setup>
-const props = defineProps({
-  to: Object,
-  //   title: String,
-});
-
 // States
 const useStatePageName = useState("statePageName");
 const useIsBackButton = useState("isBackButton");

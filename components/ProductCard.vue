@@ -2,16 +2,17 @@
 // Import
 import upperCaseFirstChar from "@/helpers/js/upperCaseFirstChar";
 
+// Props
 const props = defineProps({
   product: Object,
 });
 
 // Route parameters
-const route = useRoute();
+// const route = useRoute();
 
+// Image placeholder
 const imagePlaceholder = "/img/products/placeholder.jpg";
-
-function replaceByDefault(e) {
+function replaceImgByDefault(e) {
   e.target.src = imagePlaceholder;
 }
 </script>
@@ -22,7 +23,7 @@ function replaceByDefault(e) {
     <div class="product-card__left">
       <img
         :src="product.image"
-        @error="replaceByDefault"
+        @error="replaceImgByDefault"
         :alt="product.title"
         class="product-card__image"
       />
@@ -153,8 +154,6 @@ function replaceByDefault(e) {
   &__buttons {
     display: flex;
     margin-bottom: 5px;
-    // justify-content: space-between;
-    // vertical-align: middle;
   }
 }
 

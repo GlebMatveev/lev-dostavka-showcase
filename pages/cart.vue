@@ -48,7 +48,6 @@ watch(
 .cart {
   padding-left: 15px;
   padding-right: 15px;
-
   padding-bottom: 150px;
 }
 </style>

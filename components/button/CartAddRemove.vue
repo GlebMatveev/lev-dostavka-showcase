@@ -3,31 +3,20 @@
 import cart from "@/helpers/js/cart";
 import filters from "@/helpers/js/filters";
 
+// Props
 const props = defineProps({
   product: Object,
 });
 
-// // Route parameters
-// const route = useRoute();
-
-// // States
+// States
 const useStateProducts = useState("stateProducts");
-// const filteredProducts = filters.filterArrayByKey(
-//   useStateProducts.value,
-//   "subcategory_slug",
-//   route.params.subcategory
-// );
 const useStateCart = useState("stateCart");
-// const useStateCartQuantity = useState("stateCartQuantity");
-// const useStateCartPrice = useState("stateCartPrice");
 const useStateCartProducts = useState("stateCartProducts");
 
 // Watchers
 watch(
   useStateCart,
   () => {
-    // useStateCartQuantity.value = cart.calcCartQuantity(useStateCart.value);
-    // useStateCartPrice.value = cart.calcCartPrice(useStateCart.value);
     useStateCartProducts.value = filters.filterArrayByArray(
       useStateProducts.value,
       useStateCart.value
@@ -61,9 +50,7 @@ watch(
 .cart-add-remove {
   display: flex;
   align-items: center;
-
   background-color: $color-primary;
-
   border-radius: 45px;
 
   &__remove {
