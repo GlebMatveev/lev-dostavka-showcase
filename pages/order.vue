@@ -73,12 +73,17 @@ onMounted(() => {
 
 function orderString() {
   const strLineBreak = "\n";
+
+  //
   let strOrder = "";
 
+  // Phone number
   let strPhone = personalData.phone;
 
+  // Name
   let strName = personalData.name;
 
+  // Products list
   let strProductList = "";
   for (let key in useStateCart.value) {
     const index = useStateProducts.value.findIndex(
@@ -93,7 +98,8 @@ function orderString() {
         strLineBreak;
     }
   }
-  if (personalData.gift !== "") {
+  // If
+  if (personalData.gift !== "" && useStateCartPrice.value >= 1000) {
     strProductList =
       strProductList + "+ " + personalData.gift + " в подарок" + strLineBreak;
   }
