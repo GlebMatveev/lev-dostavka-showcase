@@ -7,7 +7,7 @@ const runtimeConfig = useRuntimeConfig();
 
 // Fetch
 const { data: categories } = await useFetch(
-  runtimeConfig.public.apiBase + "/categories.json",
+  runtimeConfig.public.apiBase + "/categories",
   {
     transform: (array) => {
       return orderArray(array, "sort_weight");
@@ -16,7 +16,7 @@ const { data: categories } = await useFetch(
 );
 const { data: subcategories } = await useAsyncData(
   "subcategory",
-  () => $fetch(runtimeConfig.public.apiBase + "/subcategories.json"),
+  () => $fetch(runtimeConfig.public.apiBase + "/subcategories"),
   {
     transform: (array) => {
       return orderArray(array, "sort_weight");
@@ -25,7 +25,7 @@ const { data: subcategories } = await useAsyncData(
 );
 const { data: products } = await useAsyncData(
   "product",
-  () => $fetch(runtimeConfig.public.apiBase + "/products.json"),
+  () => $fetch(runtimeConfig.public.apiBase + "/products"),
   {
     transform: (array) => {
       return orderArray(array, "sort_weight");

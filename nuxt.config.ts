@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-          apiBase: 'https://electroexpress.ru'
+          apiBase: 'https://lev-dostavka.ru/api'
         }
     },
     vite: {
