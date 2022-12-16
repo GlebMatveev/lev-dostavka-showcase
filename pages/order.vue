@@ -1,12 +1,61 @@
 <script setup>
 // Import
 import { vMaska } from "maska";
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss";
 
 // States
 const useStateProducts = useState("stateProducts");
 const useStateCart = useState("stateCart");
 const useStateCartPrice = useState("stateCartPrice");
 
+// Datetime
+const date = ref(new Date());
+const minDate = ref(new Date());
+const time = ref({
+  hours: new Date().getHours() + 1,
+  minutes: Math.round(new Date().getMinutes() / 10) * 10,
+});
+const minTime = ref({
+  hours: new Date().getHours() + 1,
+  minutes: Math.round(new Date().getMinutes() / 10) * 10,
+});
+const maxTime = { hours: 22, minutes: 0 };
+
+watch(date, () => {
+  const now = new Date();
+  const today = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  ).valueOf();
+  const other = new Date(
+    date.value.getFullYear(),
+    date.value.getMonth(),
+    date.value.getDate()
+  ).valueOf();
+
+  if (other === today) {
+    time.value = {
+      hours: new Date().getHours() + 1,
+      minutes: Math.round(new Date().getMinutes() / 10) * 10,
+    };
+    minTime.value = {
+      hours: new Date().getHours() + 1,
+      minutes: Math.round(new Date().getMinutes() / 10) * 10,
+    };
+  } else if (other > today) {
+    minTime.value = {
+      hours: 10,
+      minutes: 0,
+    };
+  }
+});
+
+// whatsAppNumber
+const whatsAppNumber = "79033133319";
+
+// personalData
 const personalData = reactive({
   phone: "",
   name: "",
@@ -14,14 +63,15 @@ const personalData = reactive({
   payment: "Выберите способ оплаты",
   delivery: "Выберите способ доставки",
   deliveryCost: 0,
+  deliveryReadiness: "Получить заказ по готовности (как можно быстрее)",
+  deliveryDate: date,
+  deliveryTime: time,
   locality: "Выберите населённый пункт",
+
   address: "",
   gift: "",
 });
 
-const whatsAppNumber = "79033133319";
-
-// Watchers
 watch(
   personalData,
   () => {
@@ -30,7 +80,7 @@ watch(
     sessionStorage.persons = personalData.persons;
     sessionStorage.payment = personalData.payment;
     sessionStorage.delivery = personalData.delivery;
-    localStorage.locality = personalData.locality;
+    sessionStorage.locality = personalData.locality;
     localStorage.address = personalData.address;
     sessionStorage.gift = personalData.gift;
   },
@@ -58,8 +108,8 @@ onMounted(() => {
     ? (personalData.delivery = sessionStorage.delivery)
     : (personalData.delivery = "Выберите способ доставки");
 
-  localStorage.locality && localStorage.locality != ""
-    ? (personalData.locality = localStorage.locality)
+  sessionStorage.locality && sessionStorage.locality != ""
+    ? (personalData.locality = sessionStorage.locality)
     : (personalData.locality = "Выберите населённый пункт");
 
   localStorage.address && localStorage.address != ""
@@ -74,16 +124,16 @@ onMounted(() => {
 function orderString() {
   const strLineBreak = "\n";
 
-  //
+  // Returned string
   let strOrder = "";
 
-  // Phone number
+  // Phone number string
   let strPhone = personalData.phone;
 
-  // Name
+  // Name string
   let strName = personalData.name;
 
-  // Products list
+  // Products list string
   let strProductList = "";
   for (let key in useStateCart.value) {
     const index = useStateProducts.value.findIndex(
@@ -98,113 +148,181 @@ function orderString() {
         strLineBreak;
     }
   }
-  // If
+
+  // Gift string
+  // if the order amount is more than or equal to 1000
   if (personalData.gift !== "" && useStateCartPrice.value >= 1000) {
     strProductList =
       strProductList + "+ " + personalData.gift + " в подарок" + strLineBreak;
   }
 
+  // Persons string
   let strPersons = "Приборы: " + personalData.persons;
 
+  // Delivery string
   let strDelivery = personalData.delivery;
 
+  // Locality string
   let strLocality = "";
   if (personalData.delivery === "Доставка") {
     strLocality = personalData.locality;
   }
 
+  // Address string
   let strAddress = personalData.address;
 
+  // Order amount string
   let strTotal = "";
   let strTotalComment = "";
   if (useStateCartPrice.value < 1000) {
-    if (
-      personalData.delivery === "Доставка" &&
-      personalData.locality === "Лаишево"
-    ) {
-      let totalSum = useStateCartPrice.value + 150;
-      strTotal = "Сумма заказа: " + totalSum + " ₽";
-      strTotalComment = "(включая доставку 150 ₽)";
-    } else if (
-      personalData.delivery === "Доставка" &&
-      personalData.locality === "База/Старая Пристань"
-    ) {
-      let totalSum = useStateCartPrice.value + 200;
-      strTotal = "Сумма заказа: " + totalSum + " ₽";
-      strTotalComment = "(включая доставку 200 ₽)";
-    } else if (
-      personalData.delivery === "Доставка" &&
-      personalData.locality === "Другой"
-    ) {
-      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
-      strTotalComment = "(доставка платная - уточняется у оператора)";
+    if (personalData.delivery === "Доставка") {
+      switch (personalData.locality) {
+        case "Лаишево":
+          strTotal = "Сумма заказа: " + (useStateCartPrice.value + 150) + " ₽";
+          strTotalComment = "(включая доставку 150 ₽)";
+          break;
+        case "База/Старая Пристань":
+          strTotal = "Сумма заказа: " + (useStateCartPrice.value + 200) + " ₽";
+          strTotalComment = "(включая доставку 200 ₽)";
+          break;
+        case "Другой":
+          strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+          strTotalComment = "(доставка платная - уточняется у оператора)";
+          break;
+        default:
+          strTotal = "";
+          strTotalComment = "";
+      }
     } else if (personalData.delivery === "Самовывоз") {
       strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+      strTotalComment = "";
     }
-  } else if (useStateCartPrice.value >= 1000) {
-    if (
-      (personalData.delivery === "Доставка" &&
-        personalData.locality === "Лаишево") ||
-      (personalData.delivery === "Доставка" &&
-        personalData.locality === "База/Старая Пристань")
-    ) {
-      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
-      strTotalComment = "(доставка бесплатная)";
-    } else if (
-      personalData.delivery === "Доставка" &&
-      personalData.locality === "Другой"
-    ) {
-      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
-      strTotalComment = "(сумма доставки уточняется у оператора)";
+  } else if (
+    useStateCartPrice.value >= 1000 &&
+    useStateCartPrice.value < 1200
+  ) {
+    if (personalData.delivery === "Доставка") {
+      switch (personalData.locality) {
+        case "Лаишево":
+          strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+          strTotalComment = "(доставка бесплатная)";
+          break;
+        case "База/Старая Пристань":
+          strTotal = "Сумма заказа: " + (useStateCartPrice.value + 200) + " ₽";
+          strTotalComment = "(включая доставку 200 ₽)";
+          break;
+        case "Другой":
+          strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+          strTotalComment = "(сумма доставки уточняется у оператора)";
+          break;
+        default:
+          strTotal = "";
+          strTotalComment = "";
+      }
     } else if (personalData.delivery === "Самовывоз") {
       strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+      strTotalComment = "";
+    }
+  } else if (useStateCartPrice.value >= 1200) {
+    if (personalData.delivery === "Доставка") {
+      switch (personalData.locality) {
+        case "Лаишево":
+          strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+          strTotalComment = "(доставка бесплатная)";
+          break;
+        case "База/Старая Пристань":
+          strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+          strTotalComment = "(доставка бесплатная)";
+          break;
+        case "Другой":
+          strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+          strTotalComment = "(сумма доставки уточняется у оператора)";
+          break;
+        default:
+          strTotal = "";
+          strTotalComment = "";
+      }
+    } else if (personalData.delivery === "Самовывоз") {
+      strTotal = "Сумма заказа: " + useStateCartPrice.value + " ₽";
+      strTotalComment = "";
     }
   }
 
-  let strPayment = personalData.payment + strLineBreak;
-  //
-  //
-  //
+  // Payment string
+  let strPayment = personalData.payment;
 
+  //
+  let strDeliveryReadiness = "";
+  if (
+    personalData.deliveryReadiness ===
+    "Получить заказ по готовности (как можно быстрее)"
+  ) {
+    strDeliveryReadiness = "(по готовности)";
+  } else if (
+    personalData.deliveryReadiness === "Выбрать определённое время (предзаказ)"
+  ) {
+    strDeliveryReadiness =
+      "(к " +
+      personalData.deliveryDate.getDate() +
+      "." +
+      personalData.deliveryDate.getMonth() +
+      "." +
+      personalData.deliveryDate.getFullYear() +
+      " " +
+      personalData.deliveryTime.hours +
+      ":" +
+      (personalData.deliveryTime.minutes === 0
+        ? "00"
+        : personalData.deliveryTime.minutes) +
+      ")";
+  }
+  //
+  //
+  //
   if (personalData.phone !== "") {
-    strOrder = strOrder + strPhone + strLineBreak;
+    strOrder += strPhone + strLineBreak;
   }
 
   if (personalData.name !== "") {
-    strOrder = strOrder + strName + strLineBreak;
+    strOrder += strName + strLineBreak;
   }
 
   if (strProductList !== "") {
-    strOrder = strOrder + strLineBreak + strProductList;
+    strOrder += strLineBreak + strProductList;
   }
 
-  strOrder = strOrder + strLineBreak + strPersons + strLineBreak;
+  strOrder += strLineBreak + strPersons + strLineBreak;
 
   if (personalData.delivery !== "Выберите способ доставки") {
-    strOrder = strOrder + strLineBreak + strDelivery + strLineBreak;
+    strOrder += strLineBreak + strDelivery + strLineBreak;
   }
 
   if (
+    personalData.locality !== "" &&
     personalData.locality !== "Выберите населённый пункт" &&
-    personalData.delivery != "Самовывоз"
+    personalData.delivery !== "Самовывоз"
   ) {
-    strOrder = strOrder + strLocality + strLineBreak;
+    strOrder += strLocality + strLineBreak;
   }
 
-  if (personalData.address !== "" && personalData.delivery != "Самовывоз") {
-    strOrder = strOrder + strAddress + strLineBreak;
+  if (personalData.address !== "" && personalData.delivery !== "Самовывоз") {
+    strOrder += strAddress + strLineBreak;
   }
 
-  if (strProductList !== "") {
-    strOrder = strOrder + strLineBreak + strTotal + strLineBreak;
+  if (strDeliveryReadiness !== "") {
+    strOrder += strDeliveryReadiness + strLineBreak;
   }
 
-  if (strProductList !== "" && personalData.delivery != "Самовывоз") {
-    strOrder = strOrder + strTotalComment + strLineBreak;
+  if (strTotal !== "" && strProductList !== "") {
+    strOrder += strLineBreak + strTotal + strLineBreak;
+  }
+
+  if (strTotalComment !== "" && strProductList !== "") {
+    strOrder += strTotalComment + strLineBreak;
   }
 
   if (personalData.payment !== "Выберите способ оплаты") {
-    strOrder = strOrder + strLineBreak + strPayment;
+    strOrder += strLineBreak + strPayment;
   }
 
   return strOrder;
@@ -213,11 +331,11 @@ function orderString() {
 
 <template>
   <div class="order">
-    <form class="order__form">
+    <div class="wrapper">
       <div class="input">
         <input
           v-maska
-          data-maska="+7 ### ###-##-##"
+          data-maska="+7##########"
           v-model="personalData.phone"
           id="phone"
           class="input__field"
@@ -241,7 +359,9 @@ function orderString() {
         <div class="input__background"></div>
         <label for="name" class="input__placeholder">Имя</label>
       </div>
+    </div>
 
+    <div class="wrapper">
       <div class="input">
         <select
           class="input__field input__select"
@@ -265,7 +385,9 @@ function orderString() {
           >Количество персон</label
         >
       </div>
+    </div>
 
+    <div class="wrapper">
       <div class="input">
         <select
           class="input__field input__select"
@@ -279,11 +401,13 @@ function orderString() {
         <div class="input__background"></div>
         <label for="payment" class="input__placeholder">Способ оплаты</label>
       </div>
+    </div>
 
-      <div
-        v-if="personalData.payment !== 'Выберите способ оплаты'"
-        class="input"
-      >
+    <div
+      v-if="personalData.payment !== 'Выберите способ оплаты'"
+      class="wrapper"
+    >
+      <div class="input">
         <select
           class="input__field input__select"
           v-model="personalData.delivery"
@@ -311,10 +435,10 @@ function orderString() {
                 type="radio"
                 id="gift1"
                 name="gift"
-                value="Холодный ролл с копчёной курицей"
+                value="холодный ролл с копчёной курицей"
               />
               <label class="radiogroup__label" for="gift1"
-                >Холодный ролл с копчёной курицей</label
+                >холодный ролл с копчёной курицей</label
               >
             </div>
 
@@ -325,10 +449,10 @@ function orderString() {
                 type="radio"
                 id="gift2"
                 name="gift"
-                value="Холодный ролл с крабом"
+                value="холодный ролл с крабом"
               />
               <label class="radiogroup__label" for="gift2"
-                >Холодный ролл с крабом</label
+                >холодный ролл с крабом</label
               >
             </div>
           </fieldset>
@@ -339,8 +463,8 @@ function orderString() {
             При самовывозе заказа от 1000 рублей действует акция - бесплатный
             ролл на выбор:
           </p>
-          <p class="delivery__text">- Холодный ролл с копчёной курицей</p>
-          <p class="delivery__text">- Холодный ролл с крабом</p>
+          <p class="delivery__text">- холодный ролл с копчёной курицей</p>
+          <p class="delivery__text">- холодный ролл с крабом</p>
           <p class="delivery__text text-danger">
             Пока сумма заказа менее 1000 рублей.
           </p>
@@ -403,8 +527,85 @@ function orderString() {
           </div>
         </div>
       </div>
-    </form>
+    </div>
 
+    <div
+      v-if="personalData.delivery !== 'Выберите способ доставки'"
+      class="wrapper"
+    >
+      <fieldset class="radiogroup">
+        <div class="radiogroup__radio">
+          <input
+            v-model="personalData.deliveryReadiness"
+            class="radiogroup__input"
+            type="radio"
+            id="datetime1"
+            name="datetime"
+            value="Получить заказ по готовности (как можно быстрее)"
+          />
+          <label class="radiogroup__label" for="datetime1"
+            >Получить заказ по готовности (как можно быстрее)</label
+          >
+        </div>
+
+        <div class="radiogroup__radio">
+          <input
+            v-model="personalData.deliveryReadiness"
+            class="radiogroup__input"
+            type="radio"
+            id="datetime2"
+            name="datetime"
+            value="Выбрать определённое время (предзаказ)"
+          />
+          <label class="radiogroup__label" for="datetime2"
+            >Выбрать определённое время (предзаказ)</label
+          >
+        </div>
+      </fieldset>
+
+      <div
+        v-if="
+          personalData.deliveryReadiness ===
+          'Выбрать определённое время (предзаказ)'
+        "
+      >
+        <div class="delivery__text-wrapper">
+          <p class="delivery__text">Режим работы:</p>
+          <p class="delivery__text">с 10:00 до 22:00</p>
+          <p class="delivery__text text-danger">Внимание!</p>
+          <p class="delivery__text text-danger">
+            Время указывается приблизительное и уточняется у оператора при
+            подтверждении заказа.
+          </p>
+        </div>
+        <div class="datetime-wrapper">
+          <Datepicker
+            class="datetime-wrapper__datepicker"
+            v-model="date"
+            :enable-time-picker="false"
+            :min-date="minDate"
+            auto-apply
+            placeholder="Выберите дату"
+            format="dd.MM.yyyy"
+            locale="ru"
+            position="right"
+          />
+
+          <Datepicker
+            class="datetime-wrapper__timepicker"
+            v-model="time"
+            time-picker
+            :min-time="minTime"
+            :max-time="maxTime"
+            minutes-increment="10"
+            cancel-text="Закрыть"
+            select-text="Выбрать"
+            position="left"
+          />
+        </div>
+      </div>
+    </div>
+    <!--  -->
     <div
       v-if="
         personalData.delivery !== 'Выберите способ доставки' &&
@@ -435,6 +636,15 @@ function orderString() {
 </template>
 
 <style lang="scss" scoped>
+.wrapper {
+  display: flex;
+  padding: 15px;
+  flex-direction: column;
+  border-radius: 10px;
+  background: $color-background;
+  box-shadow: $shadow-card;
+  margin-bottom: 15px;
+}
 .order {
   padding-left: 15px;
   padding-right: 15px;
@@ -590,6 +800,14 @@ function orderString() {
   }
   &__text {
     margin-bottom: 10px;
+  }
+}
+
+.datetime-wrapper {
+  display: flex;
+
+  &__datepicker {
+    margin-right: 10px;
   }
 }
 </style>

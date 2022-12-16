@@ -16,3 +16,19 @@ $color-whatsapp: #25d366;
 
 $shadow-card: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
   rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
+// Datetimepicker
+$dp__font_family: "Nunito Sans", sans-serif;
+$dp__border_radius: 10px;
+$dp__cell_border_radius: 10px;
+
+.dp__theme_light {
+  --dp-background-color: #e0e0e0;
+  --dp-text-color: #555;
+}
+.dp__input {
+  padding-top: 13px !important;
+  padding-bottom: 13px !important;
+  margin-top: 13px !important;
+  margin-bottom: 10px !important;
+}
