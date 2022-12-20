@@ -10,19 +10,20 @@ const useStateCart = useState("stateCart");
 const useStateCartPrice = useState("stateCartPrice");
 
 // Datetime
-const date = ref(new Date());
-const minDate = ref(new Date());
-const time = ref({
+const pickerDate = ref(new Date());
+const pickerTime = ref({
   hours: new Date().getHours() + 1,
   minutes: Math.round(new Date().getMinutes() / 10) * 10,
 });
+
+const minDate = ref(new Date());
 const minTime = ref({
   hours: new Date().getHours() + 1,
   minutes: Math.round(new Date().getMinutes() / 10) * 10,
 });
 const maxTime = { hours: 22, minutes: 0 };
 
-watch(date, () => {
+watch(pickerDate, () => {
   const now = new Date();
   const today = new Date(
     now.getFullYear(),
@@ -30,13 +31,13 @@ watch(date, () => {
     now.getDate()
   ).valueOf();
   const other = new Date(
-    date.value.getFullYear(),
-    date.value.getMonth(),
-    date.value.getDate()
+    pickerDate.value.getFullYear(),
+    pickerDate.value.getMonth(),
+    pickerDate.value.getDate()
   ).valueOf();
 
   if (other === today) {
-    time.value = {
+    pickerTime.value = {
       hours: new Date().getHours() + 1,
       minutes: Math.round(new Date().getMinutes() / 10) * 10,
     };
@@ -56,7 +57,7 @@ watch(date, () => {
 const whatsAppNumber = "79033133319";
 
 // personalData
-const personalData = reactive({
+const personalDataDefault = {
   phone: "",
   name: "",
   persons: 0,
@@ -64,62 +65,97 @@ const personalData = reactive({
   delivery: "Выберите способ доставки",
   deliveryCost: 0,
   deliveryReadiness: "Получить заказ по готовности (как можно быстрее)",
-  deliveryDate: date,
-  deliveryTime: time,
+  deliveryDate: pickerDate,
+  deliveryTime: pickerTime,
   locality: "Выберите населённый пункт",
-
   address: "",
   gift: "",
+};
+
+const personalData = reactive({
+  phone: personalDataDefault.phone,
+  name: personalDataDefault.name,
+  persons: personalDataDefault.persons,
+  payment: personalDataDefault.payment,
+  delivery: personalDataDefault.delivery,
+  deliveryCost: personalDataDefault.deliveryCost,
+  deliveryReadiness: personalDataDefault.deliveryReadiness,
+  deliveryDate: personalDataDefault.deliveryDate,
+  deliveryTime: personalDataDefault.deliveryTime,
+  locality: personalDataDefault.locality,
+  address: personalDataDefault.address,
+  gift: personalDataDefault.gift,
 });
 
-watch(
-  personalData,
-  () => {
-    localStorage.phone = personalData.phone;
-    localStorage.name = personalData.name;
-    sessionStorage.persons = personalData.persons;
-    sessionStorage.payment = personalData.payment;
-    sessionStorage.delivery = personalData.delivery;
-    sessionStorage.locality = personalData.locality;
-    localStorage.address = personalData.address;
-    sessionStorage.gift = personalData.gift;
-  },
-  { deep: true }
-);
+// watch(
+//   personalData,
+//   () => {
+//     localStorage.phone = personalData.phone;
+//     localStorage.name = personalData.name;
+//     sessionStorage.persons = personalData.persons;
+//     sessionStorage.payment = personalData.payment;
+//     sessionStorage.delivery = personalData.delivery;
+//     sessionStorage.deliveryCost = personalData.deliveryCost;
+//     sessionStorage.deliveryReadiness = personalData.deliveryReadiness;
+//     sessionStorage.deliveryDate = personalData.deliveryDate;
+//     sessionStorage.deliveryTime = personalData.deliveryTime;
+//     sessionStorage.locality = personalData.locality;
+//     localStorage.address = personalData.address;
+//     sessionStorage.gift = personalData.gift;
+//   },
+//   { deep: true }
+// );
 
-onMounted(() => {
-  localStorage.phone && localStorage.phone != ""
-    ? (personalData.phone = localStorage.phone)
-    : (personalData.phone = "");
+// onMounted(() => {
+//   localStorage.phone && localStorage.phone != ""
+//     ? (personalData.phone = localStorage.phone)
+//     : (personalData.phone = "");
 
-  localStorage.name && localStorage.name != ""
-    ? (personalData.name = localStorage.name)
-    : (personalData.name = "");
+//   localStorage.name && localStorage.name != ""
+//     ? (personalData.name = localStorage.name)
+//     : (personalData.name = "");
 
-  sessionStorage.persons && sessionStorage.persons != ""
-    ? (personalData.persons = sessionStorage.persons)
-    : (personalData.persons = 0);
+//   sessionStorage.persons && sessionStorage.persons != ""
+//     ? (personalData.persons = sessionStorage.persons)
+//     : (personalData.persons = 0);
 
-  sessionStorage.payment && sessionStorage.payment != ""
-    ? (personalData.payment = sessionStorage.payment)
-    : (personalData.payment = "Выберите способ оплаты");
+//   sessionStorage.payment && sessionStorage.payment != ""
+//     ? (personalData.payment = sessionStorage.payment)
+//     : (personalData.payment = personalDataDefault.payment);
 
-  sessionStorage.delivery && sessionStorage.delivery != ""
-    ? (personalData.delivery = sessionStorage.delivery)
-    : (personalData.delivery = "Выберите способ доставки");
+//   sessionStorage.delivery && sessionStorage.delivery != ""
+//     ? (personalData.delivery = sessionStorage.delivery)
+//     : (personalData.delivery = personalDataDefault.delivery);
 
-  sessionStorage.locality && sessionStorage.locality != ""
-    ? (personalData.locality = sessionStorage.locality)
-    : (personalData.locality = "Выберите населённый пункт");
+//   sessionStorage.deliveryCost && sessionStorage.deliveryCost != ""
+//     ? (personalData.deliveryCost = sessionStorage.deliveryCost)
+//     : (personalData.deliveryCost = 0);
 
-  localStorage.address && localStorage.address != ""
-    ? (personalData.address = localStorage.address)
-    : (personalData.address = "");
+//   sessionStorage.deliveryReadiness && sessionStorage.deliveryReadiness != ""
+//     ? (personalData.deliveryReadiness = sessionStorage.deliveryReadiness)
+//     : (personalData.deliveryReadiness =
+//         personalDataDefault.deliveryReadiness);
 
-  sessionStorage.gift && sessionStorage.gift != ""
-    ? (personalData.gift = sessionStorage.gift)
-    : (personalData.gift = "");
-});
+//   sessionStorage.deliveryDate && sessionStorage.deliveryDate != ""
+//     ? (personalData.deliveryDate = sessionStorage.deliveryDate)
+//     : (personalData.deliveryDate = pickerDate);
+
+//   sessionStorage.deliveryTime && sessionStorage.deliveryTime != ""
+//     ? (personalData.deliveryTime = sessionStorage.deliveryTime)
+//     : (personalData.deliveryTime = JSON.stringify(pickerTime));
+
+//   sessionStorage.locality && sessionStorage.locality != ""
+//     ? (personalData.locality = sessionStorage.locality)
+//     : (personalData.locality = personalDataDefault.locality);
+
+//   localStorage.address && localStorage.address != ""
+//     ? (personalData.address = localStorage.address)
+//     : (personalData.address = "");
+
+//   sessionStorage.gift && sessionStorage.gift != ""
+//     ? (personalData.gift = sessionStorage.gift)
+//     : (personalData.gift = "");
+// });
 
 function orderString() {
   const strLineBreak = "\n";
@@ -135,23 +171,29 @@ function orderString() {
 
   // Products list string
   let strProductList = "";
-  for (let key in useStateCart.value) {
-    const index = useStateProducts.value.findIndex(
-      (item) => item.id === useStateCart.value[key].id
-    );
-    if (index !== -1) {
-      strProductList =
-        strProductList +
-        useStateProducts.value[index].title +
-        " - " +
-        useStateCart.value[key].quantity +
-        strLineBreak;
+  if (useStateCartPrice.value > 0) {
+    for (let key in useStateCart.value) {
+      const index = useStateProducts.value.findIndex(
+        (item) => item.id === useStateCart.value[key].id
+      );
+      if (index !== -1) {
+        strProductList =
+          strProductList +
+          useStateProducts.value[index].title +
+          " - " +
+          useStateCart.value[key].quantity +
+          strLineBreak;
+      }
     }
   }
 
   // Gift string
   // if the order amount is more than or equal to 1000
-  if (personalData.gift !== "" && useStateCartPrice.value >= 1000) {
+  if (
+    personalData.gift !== personalDataDefault.gift &&
+    useStateCartPrice.value >= 1000 &&
+    personalData.delivery === "Самовывоз"
+  ) {
     strProductList =
       strProductList + "+ " + personalData.gift + " в подарок" + strLineBreak;
   }
@@ -251,11 +293,10 @@ function orderString() {
   // Payment string
   let strPayment = personalData.payment;
 
-  //
+  // Delivery readiness string
   let strDeliveryReadiness = "";
   if (
-    personalData.deliveryReadiness ===
-    "Получить заказ по готовности (как можно быстрее)"
+    personalData.deliveryReadiness === personalDataDefault.deliveryReadiness
   ) {
     strDeliveryReadiness = "(по готовности)";
   } else if (
@@ -293,13 +334,13 @@ function orderString() {
 
   strOrder += strLineBreak + strPersons + strLineBreak;
 
-  if (personalData.delivery !== "Выберите способ доставки") {
+  if (personalData.delivery !== personalDataDefault.delivery) {
     strOrder += strLineBreak + strDelivery + strLineBreak;
   }
 
   if (
     personalData.locality !== "" &&
-    personalData.locality !== "Выберите населённый пункт" &&
+    personalData.locality !== personalDataDefault.locality &&
     personalData.delivery !== "Самовывоз"
   ) {
     strOrder += strLocality + strLineBreak;
@@ -321,7 +362,7 @@ function orderString() {
     strOrder += strTotalComment + strLineBreak;
   }
 
-  if (personalData.payment !== "Выберите способ оплаты") {
+  if (personalData.payment !== personalDataDefault.payment) {
     strOrder += strLineBreak + strPayment;
   }
 
@@ -332,6 +373,7 @@ function orderString() {
 <template>
   <div class="order">
     <div class="wrapper">
+      <!-- Phone -->
       <div class="input">
         <input
           v-maska
@@ -347,6 +389,7 @@ function orderString() {
         <label for="phone" class="input__placeholder">Номер телефона</label>
       </div>
 
+      <!-- Name -->
       <div class="input">
         <input
           v-model="personalData.name"
@@ -361,6 +404,7 @@ function orderString() {
       </div>
     </div>
 
+    <!-- Persons -->
     <div class="wrapper">
       <div class="input">
         <select
@@ -387,6 +431,7 @@ function orderString() {
       </div>
     </div>
 
+    <!-- Payment -->
     <div class="wrapper">
       <div class="input">
         <select
@@ -394,7 +439,7 @@ function orderString() {
           v-model="personalData.payment"
           id="payment"
         >
-          <option disabled>Выберите способ оплаты</option>
+          <option disabled>{{ personalDataDefault.payment }}</option>
           <option>Перевод на карту</option>
           <option>Наличные</option>
         </select>
@@ -403,17 +448,19 @@ function orderString() {
       </div>
     </div>
 
+    <!-- Delivery -->
     <div
-      v-if="personalData.payment !== 'Выберите способ оплаты'"
+      v-if="personalData.payment !== personalDataDefault.payment"
       class="wrapper"
     >
+      <!-- Delivery list-->
       <div class="input">
         <select
           class="input__field input__select"
           v-model="personalData.delivery"
           id="delivery"
         >
-          <option disabled>Выберите способ доставки</option>
+          <option disabled>{{ personalDataDefault.delivery }}</option>
           <option>Самовывоз</option>
           <option>Доставка</option>
         </select>
@@ -427,6 +474,8 @@ function orderString() {
             При самовывозе заказа от 1000 рублей действует акция - бесплатный
             ролл на выбор:
           </p>
+
+          <!-- Gift -->
           <fieldset class="radiogroup">
             <div class="radiogroup__radio">
               <input
@@ -482,7 +531,7 @@ function orderString() {
             v-model="personalData.locality"
             id="locality"
           >
-            <option disabled>Выберите населённый пункт</option>
+            <option disabled>{{ personalDataDefault.locality }}</option>
             <option value="Лаишево">Лаишево</option>
             <option value="База/Старая Пристань">База/Старая Пристань</option>
             <option value="Другой">Другой</option>
@@ -495,7 +544,7 @@ function orderString() {
 
         <div
           style="margin-top: 30px"
-          v-if="personalData.locality !== 'Выберите населённый пункт'"
+          v-if="personalData.locality !== personalDataDefault.locality"
         >
           <div class="input">
             <input
@@ -530,7 +579,7 @@ function orderString() {
     </div>
 
     <div
-      v-if="personalData.delivery !== 'Выберите способ доставки'"
+      v-if="personalData.delivery !== personalDataDefault.delivery"
       class="wrapper"
     >
       <fieldset class="radiogroup">
@@ -541,11 +590,11 @@ function orderString() {
             type="radio"
             id="datetime1"
             name="datetime"
-            value="Получить заказ по готовности (как можно быстрее)"
+            :value="personalDataDefault.deliveryReadiness"
           />
-          <label class="radiogroup__label" for="datetime1"
-            >Получить заказ по готовности (как можно быстрее)</label
-          >
+          <label class="radiogroup__label" for="datetime1">{{
+            personalDataDefault.deliveryReadiness
+          }}</label>
         </div>
 
         <div class="radiogroup__radio">
@@ -581,7 +630,7 @@ function orderString() {
         <div class="datetime-wrapper">
           <Datepicker
             class="datetime-wrapper__datepicker"
-            v-model="date"
+            v-model="pickerDate"
             :enable-time-picker="false"
             :min-date="minDate"
             auto-apply
@@ -593,7 +642,7 @@ function orderString() {
 
           <Datepicker
             class="datetime-wrapper__timepicker"
-            v-model="time"
+            v-model="pickerTime"
             time-picker
             :min-time="minTime"
             :max-time="maxTime"
@@ -608,7 +657,7 @@ function orderString() {
     <!--  -->
     <div
       v-if="
-        personalData.delivery !== 'Выберите способ доставки' &&
+        personalData.delivery !== personalDataDefault.delivery &&
         useStateCartPrice > 0
       "
       class="order__list"
@@ -622,7 +671,7 @@ function orderString() {
 
   <a
     v-if="
-      personalData.delivery !== 'Выберите способ доставки' &&
+      personalData.delivery !== personalDataDefault.delivery &&
       useStateCartPrice > 0
     "
     :href="`https://wa.me/${whatsAppNumber}?text=${encodeURIComponent(
