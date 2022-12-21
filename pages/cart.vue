@@ -41,7 +41,11 @@ watch(
     />
   </div>
 
-  <PanelCartTotal :btnroute="{ name: 'order' }" btntext="Оформить заказ" />
+  <PanelCartTotal
+    :class="{ disabled: useStateCartQuantity == 0 }"
+    :btnroute="{ name: 'order' }"
+    btntext="Оформить заказ"
+  />
 </template>
 
 <style lang="scss" scoped>
@@ -49,5 +53,9 @@ watch(
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 150px;
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 </style>

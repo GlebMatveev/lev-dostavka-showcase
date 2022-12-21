@@ -4,11 +4,25 @@ import { vMaska } from "maska";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss";
 
+const altPosition = {
+  transform: "translateX(-100%)",
+};
+// Router parameters
+const router = useRouter();
+
 // States
 const useStateProducts = useState("stateProducts");
 const useStateCart = useState("stateCart");
 const useStateCartPrice = useState("stateCartPrice");
 
+// Redirect
+onMounted(() => {
+  //
+  console.log(useStateCartPrice.value);
+  if (useStateCartPrice.value === 0) {
+    router.push({ name: "index" });
+  }
+});
 // Datetime
 const pickerDate = ref(new Date());
 const pickerTime = ref({
@@ -87,75 +101,59 @@ const personalData = reactive({
   gift: personalDataDefault.gift,
 });
 
-// watch(
-//   personalData,
-//   () => {
-//     localStorage.phone = personalData.phone;
-//     localStorage.name = personalData.name;
-//     sessionStorage.persons = personalData.persons;
-//     sessionStorage.payment = personalData.payment;
-//     sessionStorage.delivery = personalData.delivery;
-//     sessionStorage.deliveryCost = personalData.deliveryCost;
-//     sessionStorage.deliveryReadiness = personalData.deliveryReadiness;
-//     sessionStorage.deliveryDate = personalData.deliveryDate;
-//     sessionStorage.deliveryTime = personalData.deliveryTime;
-//     sessionStorage.locality = personalData.locality;
-//     localStorage.address = personalData.address;
-//     sessionStorage.gift = personalData.gift;
-//   },
-//   { deep: true }
-// );
+watch(
+  personalData,
+  () => {
+    localStorage.phone = personalData.phone;
+    localStorage.name = personalData.name;
+    sessionStorage.persons = personalData.persons;
+    sessionStorage.payment = personalData.payment;
+    sessionStorage.delivery = personalData.delivery;
+    sessionStorage.deliveryReadiness = personalData.deliveryReadiness;
+    sessionStorage.locality = personalData.locality;
+    localStorage.address = personalData.address;
+    sessionStorage.gift = personalData.gift;
+  },
+  { deep: true }
+);
 
-// onMounted(() => {
-//   localStorage.phone && localStorage.phone != ""
-//     ? (personalData.phone = localStorage.phone)
-//     : (personalData.phone = "");
+onMounted(() => {
+  localStorage.phone && localStorage.phone != ""
+    ? (personalData.phone = localStorage.phone)
+    : (personalData.phone = personalDataDefault.phone);
 
-//   localStorage.name && localStorage.name != ""
-//     ? (personalData.name = localStorage.name)
-//     : (personalData.name = "");
+  localStorage.name && localStorage.name != ""
+    ? (personalData.name = localStorage.name)
+    : (personalData.name = personalDataDefault.name);
 
-//   sessionStorage.persons && sessionStorage.persons != ""
-//     ? (personalData.persons = sessionStorage.persons)
-//     : (personalData.persons = 0);
+  sessionStorage.persons && sessionStorage.persons != ""
+    ? (personalData.persons = sessionStorage.persons)
+    : (personalData.persons = personalDataDefault.persons);
 
-//   sessionStorage.payment && sessionStorage.payment != ""
-//     ? (personalData.payment = sessionStorage.payment)
-//     : (personalData.payment = personalDataDefault.payment);
+  sessionStorage.payment && sessionStorage.payment != ""
+    ? (personalData.payment = sessionStorage.payment)
+    : (personalData.payment = personalDataDefault.payment);
 
-//   sessionStorage.delivery && sessionStorage.delivery != ""
-//     ? (personalData.delivery = sessionStorage.delivery)
-//     : (personalData.delivery = personalDataDefault.delivery);
+  sessionStorage.delivery && sessionStorage.delivery != ""
+    ? (personalData.delivery = sessionStorage.delivery)
+    : (personalData.delivery = personalDataDefault.delivery);
 
-//   sessionStorage.deliveryCost && sessionStorage.deliveryCost != ""
-//     ? (personalData.deliveryCost = sessionStorage.deliveryCost)
-//     : (personalData.deliveryCost = 0);
+  sessionStorage.deliveryReadiness && sessionStorage.deliveryReadiness != ""
+    ? (personalData.deliveryReadiness = sessionStorage.deliveryReadiness)
+    : (personalData.deliveryReadiness = personalDataDefault.deliveryReadiness);
 
-//   sessionStorage.deliveryReadiness && sessionStorage.deliveryReadiness != ""
-//     ? (personalData.deliveryReadiness = sessionStorage.deliveryReadiness)
-//     : (personalData.deliveryReadiness =
-//         personalDataDefault.deliveryReadiness);
+  sessionStorage.locality && sessionStorage.locality != ""
+    ? (personalData.locality = sessionStorage.locality)
+    : (personalData.locality = personalDataDefault.locality);
 
-//   sessionStorage.deliveryDate && sessionStorage.deliveryDate != ""
-//     ? (personalData.deliveryDate = sessionStorage.deliveryDate)
-//     : (personalData.deliveryDate = pickerDate);
+  localStorage.address && localStorage.address != ""
+    ? (personalData.address = localStorage.address)
+    : (personalData.address = personalDataDefault.address);
 
-//   sessionStorage.deliveryTime && sessionStorage.deliveryTime != ""
-//     ? (personalData.deliveryTime = sessionStorage.deliveryTime)
-//     : (personalData.deliveryTime = JSON.stringify(pickerTime));
-
-//   sessionStorage.locality && sessionStorage.locality != ""
-//     ? (personalData.locality = sessionStorage.locality)
-//     : (personalData.locality = personalDataDefault.locality);
-
-//   localStorage.address && localStorage.address != ""
-//     ? (personalData.address = localStorage.address)
-//     : (personalData.address = "");
-
-//   sessionStorage.gift && sessionStorage.gift != ""
-//     ? (personalData.gift = sessionStorage.gift)
-//     : (personalData.gift = "");
-// });
+  sessionStorage.gift && sessionStorage.gift != ""
+    ? (personalData.gift = sessionStorage.gift)
+    : (personalData.gift = personalDataDefault.gift);
+});
 
 function orderString() {
   const strLineBreak = "\n";
@@ -328,11 +326,13 @@ function orderString() {
     strOrder += strName + strLineBreak;
   }
 
-  if (strProductList !== "") {
+  if (strProductList !== "" && useStateCartPrice.value > 0) {
     strOrder += strLineBreak + strProductList;
   }
 
-  strOrder += strLineBreak + strPersons + strLineBreak;
+  if (personalData.persons !== "") {
+    strOrder += strLineBreak + strPersons + strLineBreak;
+  }
 
   if (personalData.delivery !== personalDataDefault.delivery) {
     strOrder += strLineBreak + strDelivery + strLineBreak;
@@ -346,7 +346,11 @@ function orderString() {
     strOrder += strLocality + strLineBreak;
   }
 
-  if (personalData.address !== "" && personalData.delivery !== "Самовывоз") {
+  if (
+    personalData.address !== "" &&
+    personalData.locality !== personalDataDefault.locality &&
+    personalData.delivery !== "Самовывоз"
+  ) {
     strOrder += strAddress + strLineBreak;
   }
 
@@ -354,11 +358,15 @@ function orderString() {
     strOrder += strDeliveryReadiness + strLineBreak;
   }
 
-  if (strTotal !== "" && strProductList !== "") {
+  if (strTotal !== "" && strProductList !== "" && useStateCartPrice.value > 0) {
     strOrder += strLineBreak + strTotal + strLineBreak;
   }
 
-  if (strTotalComment !== "" && strProductList !== "") {
+  if (
+    strTotalComment !== "" &&
+    strProductList !== "" &&
+    useStateCartPrice.value > 0
+  ) {
     strOrder += strTotalComment + strLineBreak;
   }
 
@@ -637,7 +645,7 @@ function orderString() {
             placeholder="Выберите дату"
             format="dd.MM.yyyy"
             locale="ru"
-            position="right"
+            teleport-center
           />
 
           <Datepicker
@@ -649,11 +657,12 @@ function orderString() {
             minutes-increment="10"
             cancel-text="Закрыть"
             select-text="Выбрать"
-            position="left"
+            teleport-center
           />
         </div>
       </div>
     </div>
+
     <!--  -->
     <div
       v-if="
@@ -767,7 +776,7 @@ function orderString() {
     outline: 0;
     padding: 4px 20px 0;
     width: 100%;
-    color: $color-text-gray;
+    color: $color-input-text;
   }
 
   &__background {
