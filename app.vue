@@ -1,6 +1,7 @@
 <script setup>
 // Import
 import orderArray from "@/helpers/js/orderArray";
+import filters from "@/helpers/js/filters";
 
 // Environment Variables
 const runtimeConfig = useRuntimeConfig();
@@ -31,7 +32,11 @@ const { data: products } = await useAsyncData(
   () => $fetch(runtimeConfig.public.apiBase + "/products"),
   {
     transform: (array) => {
-      return orderArray(array, "sort_weight");
+      return filters.filterArrayByKey(
+        orderArray(array, "sort_weight"),
+        "activity",
+        "1"
+      );
     },
   }
 );
