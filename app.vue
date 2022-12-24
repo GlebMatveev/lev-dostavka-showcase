@@ -5,6 +5,9 @@ import orderArray from "@/helpers/js/orderArray";
 // Environment Variables
 const runtimeConfig = useRuntimeConfig();
 
+// Modals
+const showModal = ref(true);
+
 // Fetch
 const { data: categories } = await useFetch(
   runtimeConfig.public.apiBase + "/categories",
@@ -32,6 +35,9 @@ const { data: products } = await useAsyncData(
     },
   }
 );
+const { data: modalStartApp } = await useFetch(
+  runtimeConfig.public.apiBase + "/modals/by-code/" + "start_app"
+);
 
 // States
 const useStateCategories = useState("stateCategories", () => categories);
@@ -46,6 +52,19 @@ const useStateCartQuantity = useState("stateCartQuantity", () => 0);
 const useStateCartPrice = useState("stateCartPrice", () => 0);
 const useStateCartProducts = useState("stateCartProducts", () => []);
 const useStateFavorites = useState("stateFavorites", () => []);
+
+// Functions
+function showModalStartApp() {
+  if (
+    modalStartApp.value[0].activity === "1" &&
+    new Date(modalStartApp.value[0].activity_from) < new Date() &&
+    new Date(modalStartApp.value[0].activity_to) > new Date()
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
 </script>
 
 <template>
@@ -54,6 +73,13 @@ const useStateFavorites = useState("stateFavorites", () => []);
 
     <NuxtPage />
   </div>
+
+  <ModalOk
+    v-if="showModalStartApp()"
+    :show="showModal"
+    @close="showModal = false"
+    :content="modalStartApp[0].content"
+  />
 </template>
 
 <style lang="scss">

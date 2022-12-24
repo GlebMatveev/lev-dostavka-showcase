@@ -47,7 +47,7 @@ function replaceImgByDefault(e) {
         </div>
         <div v-if="product.weight" class="product-card__property-wrapper">
           <IconScale class="product-card__property-icon" />
-          <p class="product-card__property-text">{{ product.weight }}</p>
+          <p class="product-card__property-text">~{{ product.weight }}</p>
           <p class="product-card__property-unit">{{ product.weight_unit }}</p>
         </div>
         <div v-if="product.volume" class="product-card__property-wrapper">
