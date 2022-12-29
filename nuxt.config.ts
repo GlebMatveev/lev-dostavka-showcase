@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    // ssr: false,
     runtimeConfig: {
         public: {
           apiBase: 'https://lev-dostavka.ru/api'
@@ -70,5 +69,14 @@ export default defineNuxtConfig({
           // ],
         },
         
+      },
+      // ssr: false,
+      routeRules: {
+        // Static page generated on-demand, revalidates in background
+        // '/blog/**': { swr: true },
+        // Static page generated on-demand once
+        // '/articles/**': { static: true },
+        // Render these routes with SPA
+        // '/index': { ssr: false },
       }
 })

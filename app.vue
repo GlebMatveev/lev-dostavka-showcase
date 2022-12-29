@@ -7,7 +7,7 @@ import filters from "@/helpers/js/filters";
 const runtimeConfig = useRuntimeConfig();
 
 // Modals
-const showModal = ref(true);
+// const showModal = ref(false);
 
 // Fetch
 const { data: categories } = await useFetch(
@@ -40,9 +40,9 @@ const { data: products } = await useAsyncData(
     },
   }
 );
-const { data: modalStartApp } = await useFetch(
-  runtimeConfig.public.apiBase + "/modals/by-code/" + "start_app"
-);
+// const { data: modalStartApp } = await useFetch(
+//   runtimeConfig.public.apiBase + "/modals/by-code/" + "start_app"
+// );
 
 // States
 const useStateCategories = useState("stateCategories", () => categories);
@@ -57,19 +57,17 @@ const useStateCartQuantity = useState("stateCartQuantity", () => 0);
 const useStateCartPrice = useState("stateCartPrice", () => 0);
 const useStateCartProducts = useState("stateCartProducts", () => []);
 const useStateFavorites = useState("stateFavorites", () => []);
-
-// Functions
-function showModalStartApp() {
-  if (
-    modalStartApp.value[0].activity === "1" &&
-    new Date(modalStartApp.value[0].activity_from) < new Date() &&
-    new Date(modalStartApp.value[0].activity_to) > new Date()
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
+// const useModalStartApp = useState("stateModalStartApp", () => {
+//   if (
+//     modalStartApp.value[0].activity === "1" &&
+//     new Date(modalStartApp.value[0].activity_from) < new Date() &&
+//     new Date(modalStartApp.value[0].activity_to) > new Date()
+//   ) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// });
 </script>
 
 <template>
@@ -79,12 +77,11 @@ function showModalStartApp() {
     <NuxtPage />
   </div>
 
-  <ModalOk
-    v-if="showModalStartApp()"
-    :show="showModal"
-    @close="showModal = false"
+  <!-- <ModalOk
+    :show="useModalStartApp"
+    @close="useModalStartApp = false"
     :content="modalStartApp[0].content"
-  />
+  /> -->
 </template>
 
 <style lang="scss">

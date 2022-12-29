@@ -3,10 +3,38 @@
 const useStatePageName = useState("statePageName");
 const useIsBackButton = useState("isBackButton");
 const useIsCartButton = useState("isCartButton");
+
+const scroll = reactive({
+  position: 0,
+  direction: "",
+  isDown: false,
+});
+
+function handleScroll() {
+  if (process.client) {
+    let currentScrollPosition = window.scrollY;
+
+    if (currentScrollPosition < scroll.position) {
+      scroll.isDown = false;
+      scroll.direction = "up";
+    } else {
+      scroll.isDown = true;
+      scroll.direction = "down";
+    }
+
+    scroll.position = window.scrollY;
+  }
+}
+
+onMounted(() => {
+  if (process.client) {
+    window.addEventListener("scroll", handleScroll);
+  }
+});
 </script>
 
 <template>
-  <header class="header">
+  <header class="header" :class="{ header__background: scroll.position > 14 }">
     <nav class="header__nav">
       <div class="header__button">
         <ButtonBack v-if="useIsBackButton" />
@@ -22,15 +50,25 @@ const useIsCartButton = useState("isCartButton");
 <style lang="scss" scoped>
 .header {
   min-height: 30px;
+  position: sticky;
+  top: 0;
+  // background-color: #f5f5f5;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  &__background {
+    background: $color-background;
+    box-shadow: $shadow-card;
+  }
 
   &__nav {
     display: grid;
-    grid-template-columns: 1fr 10fr 1fr;
+    grid-template-columns: 1fr 20fr 1fr;
 
     padding-left: 15px;
     padding-right: 15px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-top: 18px;
+    padding-bottom: 15px;
   }
 
   &__title {
