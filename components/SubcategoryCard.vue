@@ -57,16 +57,16 @@ function replaceImgByDefault(e) {
   }
 }
 
-.subcategory-card:nth-child(odd) {
-  margin-right: 15px;
+.subcategory-card:nth-child(even) {
+  margin-left: 15px;
 }
 
 @media (max-width: 375px) {
   .subcategory-card {
     flex-basis: 155px;
   }
-  .subcategory-card:nth-child(odd) {
-    margin-right: 0;
+  .subcategory-card:nth-child(even) {
+    margin-left: 0;
   }
 }
 </style>
