@@ -61,9 +61,13 @@ onMounted(() => {
     box-shadow: $shadow-card;
   }
 
+  &__button {
+    min-width: 25px;
+  }
+
   &__nav {
     display: grid;
-    grid-template-columns: 1fr 18fr 1fr;
+    grid-template-columns: 1fr 20fr 1fr;
 
     padding-left: 15px;
     padding-right: 15px;
