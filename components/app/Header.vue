@@ -52,9 +52,9 @@ onMounted(() => {
   min-height: 30px;
   position: sticky;
   top: 0;
-  // background-color: #f5f5f5;
   margin-top: 15px;
   margin-bottom: 15px;
+  z-index: 5;
 
   &__background {
     background: $color-background;
