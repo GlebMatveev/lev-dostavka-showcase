@@ -101,6 +101,10 @@ const personalData = reactive({
   gift: personalDataDefault.gift,
 });
 
+let showDeliveryBlock = false;
+let showOrderBlock = false;
+let showDatetimeBlock = false;
+
 watch(
   personalData,
   () => {
@@ -113,6 +117,32 @@ watch(
     sessionStorage.locality = personalData.locality;
     localStorage.address = personalData.address;
     sessionStorage.gift = personalData.gift;
+
+    if (useStateCartPrice.value > 0) {
+      if (personalData.delivery === "Самовывоз") {
+        showDatetimeBlock = true;
+        showOrderBlock = true;
+      } else if (
+        personalData.delivery === "Доставка" &&
+        personalData.locality !== personalDataDefault.locality &&
+        personalData.address !== ""
+      ) {
+        showDatetimeBlock = true;
+        showOrderBlock = true;
+      } else {
+        showDatetimeBlock = false;
+        showOrderBlock = false;
+      }
+
+      if (personalData.payment !== personalDataDefault.payment) {
+        showDeliveryBlock = true;
+      } else {
+        showDeliveryBlock = false;
+      }
+    } else {
+      showDatetimeBlock = false;
+      showOrderBlock = false;
+    }
   },
   { deep: true }
 );
@@ -302,9 +332,13 @@ function orderString() {
   ) {
     strDeliveryReadiness =
       "(к " +
-      personalData.deliveryDate.getDate() +
+      (personalData.deliveryDate.getDate().toString().length > 1
+        ? personalData.deliveryDate.getDate()
+        : "0" + personalData.deliveryDate.getDate()) +
       "." +
-      personalData.deliveryDate.getMonth() +
+      ((Number(personalData.deliveryDate.getMonth()) + 1).toString().length > 1
+        ? Number(personalData.deliveryDate.getMonth()) + 1
+        : "0" + (Number(personalData.deliveryDate.getMonth()) + 1)) +
       "." +
       personalData.deliveryDate.getFullYear() +
       " " +
@@ -457,10 +491,7 @@ function orderString() {
     </div>
 
     <!-- Delivery -->
-    <div
-      v-if="personalData.payment !== personalDataDefault.payment"
-      class="wrapper"
-    >
+    <div v-if="showDeliveryBlock" class="wrapper">
       <!-- Delivery list-->
       <div class="input">
         <select
@@ -586,10 +617,7 @@ function orderString() {
       </div>
     </div>
 
-    <div
-      v-if="personalData.delivery !== personalDataDefault.delivery"
-      class="wrapper"
-    >
+    <div v-if="showDatetimeBlock" class="wrapper">
       <fieldset class="radiogroup">
         <div class="radiogroup__radio">
           <input
@@ -658,19 +686,14 @@ function orderString() {
             cancel-text="Закрыть"
             select-text="Выбрать"
             teleport-center
+            @cleared="console.log('Value cleared')"
           />
         </div>
       </div>
     </div>
 
     <!--  -->
-    <div
-      v-if="
-        personalData.delivery !== personalDataDefault.delivery &&
-        useStateCartPrice > 0
-      "
-      class="order__list"
-    >
+    <div v-if="showOrderBlock" class="order__list">
       <h2 class="order__list-title">Состав заказа</h2>
       <p class="order__list-content" style="white-space: pre-line">
         {{ orderString() }}
@@ -679,10 +702,7 @@ function orderString() {
   </div>
 
   <a
-    v-if="
-      personalData.delivery !== personalDataDefault.delivery &&
-      useStateCartPrice > 0
-    "
+    v-if="showOrderBlock"
     :href="`https://wa.me/${whatsAppNumber}?text=${encodeURIComponent(
       orderString()
     )}`"
